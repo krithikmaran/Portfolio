@@ -1,0 +1,53 @@
+/* Ensure the navbar is above the content */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-y: scroll;
+}
+
+h1[data-value],
+h2[data-value] {
+  color: #fff;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #4b4b4b;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #262626;
+}
+
+/* Body content styling */
+h1,
+h2,
+p,
+ul {
+  color: white;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Custom scroll for container */
+.scrollable-container {
+  height: 100vh;
+  width: 100%;
+  overflow-y: auto;
+  padding-top: 60px;
+  /* Ensure content starts below the navbar */
+  box-sizing: border-box;
+}
+
+/* New rule to adjust navbar width so it doesn't overlap the scrollbar */
+.navbar-width {
+  width: calc(100% - 8px);
+}
