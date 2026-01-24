@@ -1,16 +1,16 @@
-/* Ensure the navbar is above the content */
-body {
+/* Ensure the background is black to the very edges of the screen */
+html, 
+body, 
+#root {
   margin: 0;
   padding: 0;
-  overflow-y: scroll;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  overflow: hidden; /* Prevents double scrollbars */
 }
 
-h1[data-value],
-h2[data-value] {
-  color: #fff;
-}
-
-/* Scrollbar styling */
+/* Custom scrollbar styling for desktop */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -24,30 +24,38 @@ h2[data-value] {
   background-color: #262626;
 }
 
-/* Body content styling */
-h1,
-h2,
-p,
-ul {
+/* Text visibility and sizing */
+h1, h2, p, ul {
   color: white;
+  margin: 0;
 }
 
 h2 {
-  font-size: 1.5rem;
   font-weight: bold;
 }
 
-/* Custom scroll for container */
-.scrollable-container {
-  height: 100vh;
-  width: 100%;
-  overflow-y: auto;
-  padding-top: 60px;
-  /* Ensure content starts below the navbar */
-  box-sizing: border-box;
+/* Hide scrollbar for the snap container but keep functionality */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* New rule to adjust navbar width so it doesn't overlap the scrollbar */
+/* Navbar width adjustment logic */
 .navbar-width {
   width: calc(100% - 8px);
+}
+
+/* Mobile-Specific Tweaks */
+@media (max-width: 768px) {
+  h1 {
+    word-break: break-word;
+  }
+}
+
+/* Ensure boxes don't push the screen wider than the phone */
+* {
+  box-sizing: border-box;
 }

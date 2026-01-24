@@ -1,16 +1,19 @@
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useScroll, useSpring } from "framer-motion";
+import { useRef } from "react";
 import resume from "./assets/KrithikMaranResume.pdf";
 import logo from "./assets/large-website-logo.svg";
 import osuEngineeringLogo from "./assets/Engineering-REV-Stacked-RGBHEX.png"; 
 import "./App.css";
 
 function App() {
+  const containerRef = useRef(null);
+
   const sections = [
     {
       type: "hero",
       title: "Krithik Maran",
-      subtitle: "IT SAP Analyst // Data Engineer // Problem Solver",
-      content: "Bridging the gap between complex enterprise systems and streamlined business processes. Currently engineering the nexus of modern Enterprise Systems, Cloud Platforms, and AI.",
+      subtitle: "SAP Analyst // Software Developer // Data Engineer // Problem Solver",
+      content: "Bridging the gap between complex enterprise systems and streamlined business processes. Currently engineering the intersection of modern Enterprise Systems, Cloud Platforms, and AI.",
     },
     {
       type: "education",
@@ -18,129 +21,114 @@ function App() {
       institution: "The Ohio State University",
       degree: "B.S. Electrical and Computer Engineering",
       logo: osuEngineeringLogo,
-      content: ["Graduated: May 2025", "Summa Cum Laude", "Computer Engineering"],
+      content: ["Graduated: May 2025", "Computer Engineering"],
     },
     {
       type: "stack",
       title: "Enterprise Systems",
-      content: [
-        "SAP S/4HANA", 
-        "ABAP RAP & BAdI", 
-        "AMDP / SQLScript", 
-        "HANA CDS Views", 
-        "Fiori UI", 
-        "Data Migration"
-      ],
+      content: ["SAP S/4HANA", "ABAP RAP & BAdI", "AMDP / SQLScript", "HANA CDS Views", "Fiori UI", "Data Migration"],
     },
     {
       type: "stack",
       title: "Engineering & Intelligence",
-      content: [
-        "Python (Pandas)", 
-        "PyTorch / Scikit-Learn", 
-        "PostgreSQL", 
-        "React.JS", 
-        "SQL", 
-        "Ignition SCADA"
-      ],
+      content: ["Python (Pandas)", "PyTorch / Scikit-Learn", "PostgreSQL", "React.JS", "SQL", "Ignition SCADA"],
     },
     {
-      /* UPDATED: OCI FREE TIER KUBERNETES PROJECT */
       type: "stack",
       title: "Cloud Infrastructure Project",
       content: [
         "Custom Oracle Cloud (OCI) Kubernetes Cluster", 
         "ARM64 Ampere Architecture", 
-        "MetalLB",
-        "Deployed Containerized Microservices to Automate Tasks"
+        "MetalLB Load Balancer",
+        "Cloudflare Zero Trust Tunnel",
+        "Automated Task Microservices"
       ],
     },
     {
       type: "stack",
       title: "Website Stack",
-      content: [
-        "Vercel Hosting", 
-        "Cloudflare Domain", 
-        "Kubernetes Backend (In Development)"
-      ],
+      content: ["Vercel Edge Hosting", "Cloudflare WAF Proxy", "Hybrid K8s Backend"],
     },
   ];
 
-  const { scrollYProgress } = useScroll();
+  const { scrollYProgress } = useScroll({ container: containerRef });
   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
-  const opacityIndicator = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
 
   return (
-    <div className="h-screen w-full overflow-y-scroll snap-y snap-mandatory scrollbar-hide bg-black selection:bg-white selection:text-black">
-      
+    <div 
+      ref={containerRef}
+      className="h-[100svh] w-full overflow-y-scroll snap-y snap-mandatory scrollbar-hide bg-black text-white selection:bg-white selection:text-black"
+    >
       {/* Top Progress Bar */}
-      <motion.div className="fixed top-0 left-0 right-0 h-[1px] bg-white/40 origin-left z-[60]" style={{ scaleX }} />
+      <motion.div 
+        className="fixed top-0 left-0 right-0 h-[2px] bg-white/60 origin-left z-[100]" 
+        style={{ scaleX }} 
+      />
 
-      {/* Header */}
+      {/* Header Navigation */}
       <motion.nav
-        className="fixed top-0 left-0 w-full p-6 flex justify-between items-center z-50"
+        className="fixed top-0 left-0 w-full p-6 flex justify-between items-center z-[90]"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2 }}
       >
-        <img src={logo} alt="Logo" className="h-7 md:h-9 opacity-90 hover:opacity-100 transition-opacity" />
+        <img 
+          src={logo} 
+          alt="Logo" 
+          className="h-10 md:h-14 w-auto flex-shrink-0 opacity-100 transition-all active:scale-95" 
+        />
         
-        <div className="bg-white/5 border border-white/10 backdrop-blur-xl px-8 py-4 rounded-full flex space-x-10 items-center shadow-2xl">
-          <a href={resume} download className="text-[12px] md:text-[14px] tracking-[0.2em] font-medium text-neutral-300 hover:text-white transition-all hover:scale-105 uppercase">Resume</a>
-          <a href="https://github.com/krithikmaran" target="_blank" rel="noopener noreferrer" className="text-[12px] md:text-[14px] tracking-[0.2em] font-medium text-neutral-300 hover:text-white transition-all hover:scale-105 uppercase">GitHub</a>
-          <a href="https://linkedin.com/in/krithikmaran" target="_blank" rel="noopener noreferrer" className="text-[12px] md:text-[14px] tracking-[0.2em] font-medium text-neutral-300 hover:text-white transition-all hover:scale-105 uppercase">LinkedIn</a>
+        <div className="bg-white/10 border border-white/20 backdrop-blur-2xl px-5 py-3 rounded-full flex space-x-6 items-center shadow-2xl ml-2">
+          <a href={resume} download className="text-[10px] md:text-xs tracking-widest font-bold text-white uppercase">Resume</a>
+          <a href="https://github.com/krithikmaran" target="_blank" className="text-[10px] md:text-xs tracking-widest font-bold text-white uppercase">GitHub</a>
+          <a href="https://linkedin.com/in/krithikmaran" target="_blank" className="text-[10px] md:text-xs tracking-widest font-bold text-white uppercase">LinkedIn</a>
         </div>
       </motion.nav>
 
-      {/* Main Sections */}
       {sections.map((section, index) => (
-        <section key={index} className="h-screen w-full flex items-center justify-center snap-start bg-black relative px-4 overflow-hidden">
-          
+        <section 
+          key={index} 
+          className="h-[100svh] w-full flex items-center justify-center snap-start bg-black relative px-6 overflow-hidden"
+        >
           <motion.div
-            className="w-full max-w-5xl text-center flex flex-col items-center"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ amount: 0.4 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full max-w-4xl text-center flex flex-col items-center"
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ amount: 0.3 }}
+            transition={{ duration: 0.8 }}
           >
             {/* HERO VARIANT */}
             {section.type === "hero" && (
-              <>
-                <motion.h1 
-                  className="text-5xl md:text-8xl font-bold tracking-[0.1em] uppercase text-white mb-4"
-                  style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                >
+              <div className="mt-[-5svh]">
+                <h1 className="text-4xl md:text-8xl font-black tracking-tighter uppercase leading-none mb-4">
                   {section.title}
-                </motion.h1>
-                <p className="text-xs md:text-sm tracking-[0.6em] uppercase text-neutral-400 mb-12 font-medium">
+                </h1>
+                <p className="text-[10px] md:text-sm tracking-[0.3em] uppercase text-neutral-400 mb-8 font-bold">
                   {section.subtitle}
                 </p>
-                <motion.div className="w-fit max-w-xl bg-white/[0.03] border border-white/10 backdrop-blur-3xl px-10 py-8 rounded-[2.5rem] shadow-2xl">
-                  <p className="text-sm md:text-base text-neutral-300 leading-relaxed font-light italic">
+                <div className="bg-white/5 border border-white/10 p-6 md:p-10 rounded-3xl backdrop-blur-sm mx-auto">
+                  <p className="text-sm md:text-xl text-neutral-200 leading-relaxed font-light italic">
                     "{section.content}"
                   </p>
-                </motion.div>
-              </>
+                </div>
+              </div>
             )}
 
             {/* EDUCATION VARIANT */}
             {section.type === "education" && (
               <>
-                <h2 className="text-xl md:text-2xl font-light tracking-[0.6em] uppercase text-white mb-10 opacity-80" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                  {section.title}
-                </h2>
-                <div className="mb-8 p-8 bg-white/5 border border-white/10 rounded-3xl backdrop-blur-md">
+                <h2 className="text-xl md:text-3xl font-light tracking-[0.4em] uppercase mb-10">{section.title}</h2>
+                <div className="mb-6 p-6 bg-white/[0.03] border border-white/10 rounded-2xl shadow-2xl backdrop-blur-md">
                    <img 
                      src={section.logo} 
-                     alt="Ohio State University College of Engineering" 
-                     className="h-24 md:h-32 w-auto grayscale brightness-200 contrast-125" 
+                     alt="OSU" 
+                     className="h-12 md:h-28 w-auto object-contain brightness-0 invert opacity-90" 
                    />
                 </div>
-                <h3 className="text-white text-lg font-medium tracking-widest mb-2 uppercase">{section.institution}</h3>
-                <p className="text-neutral-400 text-sm mb-8 tracking-wide italic">{section.degree}</p>
-                <div className="flex flex-wrap justify-center gap-3">
+                <h3 className="text-white text-base md:text-2xl font-bold uppercase mb-2">{section.institution}</h3>
+                <p className="text-neutral-400 text-xs md:text-sm mb-6 italic">{section.degree}</p>
+                <div className="flex flex-wrap justify-center gap-2 max-w-sm">
                   {section.content.map((item, i) => (
-                    <span key={i} className="px-5 py-2 rounded-full bg-white/5 border border-white/10 text-[11px] text-neutral-300 uppercase tracking-widest font-medium">
+                    <span key={i} className="px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-[9px] md:text-xs uppercase font-bold tracking-widest">
                       {item}
                     </span>
                   ))}
@@ -151,34 +139,44 @@ function App() {
             {/* STACK VARIANT */}
             {section.type === "stack" && (
               <>
-                <h2 className="text-xl md:text-2xl font-light tracking-[0.6em] uppercase text-white mb-12 opacity-80" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                  {section.title}
-                </h2>
-                <div className="flex flex-wrap justify-center gap-4 max-w-3xl">
+                <h2 className="text-xl md:text-3xl font-light tracking-[0.4em] uppercase mb-12">{section.title}</h2>
+                <div className="flex flex-wrap justify-center gap-3 max-w-2xl">
                   {section.content.map((item, i) => (
-                    <motion.div
-                      key={i}
-                      className="px-6 py-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-all cursor-default"
-                      whileHover={{ scale: 1.05, borderColor: "rgba(255,255,255,0.3)" }}
-                    >
-                      <span className="text-[12px] md:text-[13px] tracking-[0.15em] uppercase text-neutral-200 font-medium">
-                        {item}
-                      </span>
-                    </motion.div>
+                    <div key={i} className="px-5 py-3 rounded-xl bg-white/5 border border-white/10">
+                      <span className="text-xs md:text-lg tracking-widest uppercase text-white font-medium">{item}</span>
+                    </div>
                   ))}
                 </div>
               </>
             )}
           </motion.div>
 
-          {/* Scroll Indicator */}
-          {index === 0 && (
-            <motion.div style={{ opacity: opacityIndicator }} className="absolute bottom-10 left-1/2 -translate-x-1/2">
-               <div className="w-[1px] h-12 bg-neutral-900 relative overflow-hidden">
-                <motion.div className="absolute top-0 left-0 w-full h-full bg-neutral-500" animate={{ y: ["-100%", "100%"] }} transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }} />
-              </div>
-            </motion.div>
-          )}
+          {/* INDICATOR AT BOTTOM */}
+          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center z-[50]">
+            {index < sections.length - 1 ? (
+              <>
+                <span className="text-[10px] tracking-[0.4em] text-neutral-500 uppercase mb-2 font-bold">Next</span>
+                <div className="w-[1px] h-10 bg-white/20 relative overflow-hidden">
+                  <motion.div 
+                    className="absolute top-0 left-0 w-full h-full bg-white" 
+                    animate={{ y: ["-100%", "100%"] }} 
+                    transition={{ duration: 1.5, repeat: Infinity }} 
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="w-[1px] h-10 bg-white/20 relative overflow-hidden rotate-180">
+                  <motion.div 
+                    className="absolute top-0 left-0 w-full h-full bg-white" 
+                    animate={{ y: ["-100%", "100%"] }} 
+                    transition={{ duration: 1.5, repeat: Infinity }} 
+                  />
+                </div>
+                <span className="text-[10px] tracking-[0.4em] text-neutral-500 uppercase mt-2 font-bold">Back</span>
+              </>
+            )}
+          </div>
         </section>
       ))}
     </div>
