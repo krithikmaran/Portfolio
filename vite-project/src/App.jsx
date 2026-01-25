@@ -113,7 +113,7 @@ function App() {
                 <h1 className="text-4xl md:text-8xl font-black tracking-tighter uppercase leading-none mb-4">{section.title}</h1>
                 <p className="text-[10px] md:text-sm tracking-[0.3em] uppercase text-neutral-400 mb-8 font-bold">{section.subtitle}</p>
                 <div className="bg-white/5 border border-white/10 p-6 md:p-10 rounded-3xl backdrop-blur-sm mx-auto">
-                  <p className="text-sm md:text-xl text-neutral-200 leading-relaxed font-light italic">"{section.content}"</p>
+                  <p className="text-sm md:text-xl text-neutral-200 leading-relaxed font-light italic">{section.content}</p>
                 </div>
               </div>
             )}
