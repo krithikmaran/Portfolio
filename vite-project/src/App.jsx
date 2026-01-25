@@ -1,6 +1,6 @@
 import { motion, useScroll, useSpring } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
-import { Sun, Moon } from "lucide-react"; // Import Lucide icons
+import { Sun, Moon } from "lucide-react"; 
 import resume from "./assets/Krithik Maran Resume.pdf";
 import logo from "./assets/large-website-logo.svg";
 import osuEngineeringLogo from "./assets/Engineering-REV-Stacked-RGBHEX.png";
@@ -102,13 +102,11 @@ function App() {
       className="h-[100svh] w-full overflow-y-scroll snap-y snap-mandatory scrollbar-hide theme-transition selection:bg-neutral-500 selection:text-white"
       style={{ backgroundColor: "var(--bg-main)", color: "var(--text-main)" }}
     >
-      {/* Scroll Progress Bar */}
       <motion.div 
         className="fixed top-0 left-0 right-0 h-[2px] origin-left z-[100]" 
         style={{ scaleX, backgroundColor: "var(--text-main)" }} 
       />
 
-      {/* Persistent Navigation */}
       <motion.nav
         className="fixed top-0 left-0 w-full p-6 flex justify-between items-center z-[90]"
         initial={{ opacity: 0, y: -20 }}
@@ -130,22 +128,20 @@ function App() {
           <a href="https://github.com/krithikmaran" target="_blank" rel="noopener noreferrer" className="text-[10px] md:text-xs tracking-widest font-bold uppercase hover:opacity-70 transition-opacity">GitHub</a>
           <a href="https://linkedin.com/in/krithikmaran" target="_blank" rel="noopener noreferrer" className="text-[10px] md:text-xs tracking-widest font-bold uppercase hover:opacity-70 transition-opacity">LinkedIn</a>
           
-          {/* Theme Toggle Button with Icons */}
           <button 
             onClick={toggleTheme}
             className="hover:opacity-50 transition-all border-l pl-4 border-current flex items-center justify-center"
             aria-label="Toggle Theme"
           >
             {theme === "dark" ? (
-              <Sun size={18} strokeWidth={2.5} />
-            ) : (
               <Moon size={18} strokeWidth={2.5} />
+            ) : (
+              <Sun size={18} strokeWidth={2.5} />
             )}
           </button>
         </div>
       </motion.nav>
 
-      {/* Main Sections */}
       {sections.map((section, index) => (
         <section 
           key={index} 
@@ -229,18 +225,33 @@ function App() {
             )}
           </motion.div>
 
-          {/* Scrolling Indicator Footer */}
+          {/* Corrected Scrolling Indicator Footer */}
           <div className="flex-1 w-full flex items-end justify-center pb-24 md:pb-12">
-            <div className="flex flex-col items-center">
-              <span style={{ color: "var(--text-muted)" }} className="text-[10px] tracking-[0.4em] uppercase mb-2 font-bold">
+            <div 
+              className="flex flex-col items-center cursor-pointer group"
+              onClick={() => {
+                const isLast = index === sections.length - 1;
+                if (isLast) {
+                  containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                  containerRef.current?.scrollTo({ 
+                    top: containerRef.current.scrollTop + window.innerHeight, 
+                    behavior: 'smooth' 
+                  });
+                }
+              }}
+            >
+              <span style={{ color: "var(--text-muted)" }} className="text-[10px] tracking-[0.4em] uppercase mb-2 font-bold transition-colors group-hover:text-[var(--text-main)]">
                 {index < sections.length - 1 ? "Next" : "Back"}
               </span>
               <div style={{ backgroundColor: "var(--card-border)" }} className="w-[1px] h-10 relative overflow-hidden">
                 <motion.div 
                   className="absolute top-0 left-0 w-full h-full" 
                   style={{ backgroundColor: "var(--text-main)" }}
-                  animate={{ y: ["-100%", "100%"] }} 
-                  transition={{ duration: 1.5, repeat: Infinity }} 
+                  animate={{ 
+                    y: index < sections.length - 1 ? ["-100%", "100%"] : ["100%", "-100%"] 
+                  }} 
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }} 
                 />
               </div>
             </div>
