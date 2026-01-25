@@ -154,7 +154,7 @@ function App() {
                   <img 
                     src={section.logo} 
                     alt="OSU" 
-                    className="h-16 md:h-28 w-auto object-contain brightness-0 invert opacity-90" 
+                    className="h-[100px] md:h-[180px] w-auto object-contain brightness-0 invert opacity-90" 
                   />
                 </div>
 
