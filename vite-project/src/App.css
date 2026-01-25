@@ -1,4 +1,38 @@
-/* Ensure the background is black to the very edges of the screen */
+:root {
+  /* --- Dark Mode Defaults (Black Background) --- */
+  --bg-main: #000000;
+  --text-main: #ffffff;
+  --text-muted: #a3a3a3;
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --nav-bg: rgba(255, 255, 255, 0.1);
+  
+  /* LOGO: Flips a dark logo to white so it's the "opposite" of the background */
+  --nav-logo-filter: none; 
+  --partner-logo-filter: brightness(0) invert(1);
+  
+  --scrollbar-thumb: #4b4b4b;
+  --scrollbar-track: #262626;
+}
+
+[data-theme='light'] {
+  /* --- Light Mode Overrides (White Background) --- */
+  --bg-main: #fcfcfc;
+  --text-main: #111111;
+  --text-muted: #555555;
+  --card-bg: rgba(0, 0, 0, 0.04);
+  --card-border: rgba(0, 0, 0, 0.08);
+  --nav-bg: rgba(0, 0, 0, 0.05);
+  
+  /* LOGO: Keeps the original dark logo dark (the "opposite" of white background) */
+  --nav-logo-filter: invert(1); 
+  --partner-logo-filter: brightness(0);
+  
+  --scrollbar-thumb: #cccccc;
+  --scrollbar-track: #f0f0f0;
+}
+
+/* Global Setup */
 html, 
 body, 
 #root {
@@ -6,35 +40,28 @@ body,
   padding: 0;
   width: 100%;
   height: 100%;
-  background-color: #000000;
-  overflow: hidden; /* Prevents double scrollbars */
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  overflow: hidden; 
+  transition: background-color 0.5s ease, color 0.5s ease;
 }
 
-/* Custom scrollbar styling for desktop */
+* {
+  box-sizing: border-box;
+}
+
+/* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
 }
-
 ::-webkit-scrollbar-thumb {
-  background-color: #4b4b4b;
+  background-color: var(--scrollbar-thumb);
   border-radius: 10px;
 }
-
 ::-webkit-scrollbar-track {
-  background-color: #262626;
+  background-color: var(--scrollbar-track);
 }
 
-/* Text visibility and sizing */
-h1, h2, p, ul {
-  color: white;
-  margin: 0;
-}
-
-h2 {
-  font-weight: bold;
-}
-
-/* Hide scrollbar for the snap container but keep functionality */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
@@ -43,19 +70,12 @@ h2 {
   scrollbar-width: none;
 }
 
-/* Navbar width adjustment logic */
-.navbar-width {
-  width: calc(100% - 8px);
+.theme-transition {
+  transition: all 0.5s ease;
 }
 
-/* Mobile-Specific Tweaks */
 @media (max-width: 768px) {
   h1 {
     word-break: break-word;
   }
-}
-
-/* Ensure boxes don't push the screen wider than the phone */
-* {
-  box-sizing: border-box;
 }
