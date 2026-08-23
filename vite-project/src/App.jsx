@@ -79,17 +79,19 @@ function App() {
     {
       type: "stack",
       title: "Cloud Infrastructure Project",
+      subtitle: "Decommissioned following Oracle Cloud (OCI) Free Tier resource policy revisions",
       content: [
         "Custom Oracle Cloud (OCI) Kubernetes Cluster", 
         "ARM64 Ampere Architecture", 
         "MetalLB Load Balancer",
-        "Automated Task Microservices"
+        "Automated Task Microservices",
+        "Status: Decommissioned (OCI Policy Revision)"
       ],
     },
     {
       type: "stack",
       title: "Website Stack",
-      content: ["React.JS","Vercel", "Cloudflare", "K8s Backend (Coming Soon)"],
+      content: ["React.JS", "Vercel", "Cloudflare", "K8s Backend (Decommissioned)"],
     },
   ];
 
@@ -213,7 +215,13 @@ function App() {
 
             {section.type === "stack" && (
               <div className="w-full flex flex-col items-center">
-                <h2 className="text-xl md:text-3xl font-light tracking-[0.4em] uppercase mb-12">{section.title}</h2>
+                <h2 className="text-xl md:text-3xl font-light tracking-[0.4em] uppercase mb-4">{section.title}</h2>
+                {section.subtitle && (
+                  <p style={{ color: "var(--text-muted)" }} className="text-[10px] md:text-xs tracking-[0.25em] uppercase mb-8 font-semibold text-center max-w-xl">
+                    {section.subtitle}
+                  </p>
+                )}
+                {!section.subtitle && <div className="mb-8" />}
                 <div className="flex flex-wrap justify-center gap-3 max-w-2xl">
                   {section.content.map((item, i) => (
                     <div key={i} style={{ backgroundColor: "var(--card-bg)", borderColor: "var(--card-border)" }} className="px-5 py-3 rounded-xl border">
