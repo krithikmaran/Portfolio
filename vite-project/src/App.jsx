@@ -1,10 +1,14 @@
 import { motion, useScroll, useSpring } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
-import { Sun, Moon } from "lucide-react"; 
+import { Sun, Moon } from "lucide-react";
 import resume from "./assets/Krithik Maran Resume.pdf";
 import logo from "./assets/large-website-logo.svg";
 import osuEngineeringLogo from "./assets/Engineering-REV-Stacked-RGBHEX.png";
-import cintasLogo from "./assets/CintasLogo.png"; 
+import cintasLogo from "./assets/CintasLogo.png";
+import EnterpriseSystems from "./EnterpriseSystems";
+import EngineeringIntelligence from "./EngineeringIntelligence";
+import KubernetesDiagram from "./KubernetesDiagram";
+import WebsiteStack from "./WebsiteStack";
 import "./App.css";
 
 function App() {
@@ -15,13 +19,13 @@ function App() {
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    
+
     const initialTheme = savedTheme || (mediaQuery.matches ? "dark" : "light");
     setTheme(initialTheme);
     document.documentElement.setAttribute("data-theme", initialTheme);
 
     const handleChange = (e) => {
-      if (!localStorage.getItem("theme")) { 
+      if (!localStorage.getItem("theme")) {
         const newTheme = e.matches ? "dark" : "light";
         setTheme(newTheme);
         document.documentElement.setAttribute("data-theme", newTheme);
@@ -67,31 +71,20 @@ function App() {
       content: ["Graduated: May 2025", "Computer Engineering"],
     },
     {
-      type: "stack",
+      type: "enterprise-systems",
       title: "Enterprise Systems",
-      content: ["SAP S/4 HANA", "SAP ECC", "SAP BTP", "ABAP", "CDS Views", "RAP Applications"],
     },
     {
-      type: "stack",
+      type: "engineering-intelligence",
       title: "Engineering & Intelligence",
-      content: ["Python", "Java", "React.JS", "Pytorch", "Scikit-Learn", "AWS EKS", "Oracle Cloud Compute", "Argo Workflows","Vertex AI", "BigQuery"],
     },
     {
-      type: "stack",
+      type: "k8s-diagram",
       title: "Cloud Infrastructure Project",
-      subtitle: "Decommissioned following Oracle Cloud (OCI) Free Tier resource policy revisions",
-      content: [
-        "Custom Oracle Cloud (OCI) Kubernetes Cluster", 
-        "ARM64 Ampere Architecture", 
-        "MetalLB Load Balancer",
-        "Automated Task Microservices",
-        "Status: Decommissioned (OCI Policy Revision)"
-      ],
     },
     {
-      type: "stack",
+      type: "website-stack",
       title: "Website Stack",
-      content: ["React.JS", "Vercel", "Cloudflare", "K8s Backend (Decommissioned)"],
     },
   ];
 
@@ -99,14 +92,14 @@ function App() {
   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className="h-[100svh] w-full overflow-y-scroll snap-y snap-mandatory scrollbar-hide theme-transition selection:bg-neutral-500 selection:text-white"
       style={{ backgroundColor: "var(--bg-main)", color: "var(--text-main)" }}
     >
-      <motion.div 
-        className="fixed top-0 left-0 right-0 h-[2px] origin-left z-[100]" 
-        style={{ scaleX, backgroundColor: "var(--text-main)" }} 
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-[2px] origin-left z-[100]"
+        style={{ scaleX, backgroundColor: "var(--text-main)" }}
       />
 
       <motion.nav
@@ -114,23 +107,23 @@ function App() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <img 
-          src={logo} 
-          alt="Logo" 
+        <img
+          src={logo}
+          alt="Logo"
           style={{ filter: "var(--nav-logo-filter)" }}
-          className="h-10 md:h-14 w-auto flex-shrink-0 transition-all active:scale-95 cursor-pointer" 
+          className="h-10 md:h-14 w-auto flex-shrink-0 transition-all active:scale-95 cursor-pointer"
           onClick={() => containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })}
         />
-        
-        <div 
+
+        <div
           style={{ backgroundColor: "var(--nav-bg)", borderColor: "var(--card-border)" }}
           className="border backdrop-blur-2xl px-5 py-3 rounded-full flex space-x-4 md:space-x-6 items-center shadow-2xl ml-2"
         >
           <a href={resume} target="_blank" rel="noopener noreferrer" className="text-[10px] md:text-xs tracking-widest font-bold uppercase hover:opacity-70 transition-opacity">Resume</a>
           <a href="https://github.com/krithikmaran" target="_blank" rel="noopener noreferrer" className="text-[10px] md:text-xs tracking-widest font-bold uppercase hover:opacity-70 transition-opacity">GitHub</a>
           <a href="https://linkedin.com/in/krithikmaran" target="_blank" rel="noopener noreferrer" className="text-[10px] md:text-xs tracking-widest font-bold uppercase hover:opacity-70 transition-opacity">LinkedIn</a>
-          
-          <button 
+
+          <button
             onClick={toggleTheme}
             className="hover:opacity-50 transition-all border-l pl-4 border-current flex items-center justify-center"
             aria-label="Toggle Theme"
@@ -145,8 +138,8 @@ function App() {
       </motion.nav>
 
       {sections.map((section, index) => (
-        <section 
-          key={index} 
+        <section
+          key={index}
           className="h-[100svh] w-full flex flex-col items-center snap-start relative px-6 overflow-hidden"
         >
           <div className="flex-1" />
@@ -173,11 +166,11 @@ function App() {
                 <h2 className="text-xl md:text-2xl font-light tracking-[0.4em] uppercase mb-10">{section.title}</h2>
                 {section.logo && (
                   <div className="mb-12 flex justify-center">
-                    <img 
-                      src={section.logo} 
-                      alt="Company" 
-                      style={{ filter: "var(--partner-logo-filter)" }} 
-                      className="h-16 md:h-28 w-auto object-contain opacity-90" 
+                    <img
+                      src={section.logo}
+                      alt="Company"
+                      style={{ filter: "var(--partner-logo-filter)" }}
+                      className="h-16 md:h-28 w-auto object-contain opacity-90"
                     />
                   </div>
                 )}
@@ -196,11 +189,11 @@ function App() {
               <div className="w-full flex flex-col items-center">
                 <h2 className="text-xl md:text-2xl font-light tracking-[0.4em] uppercase mb-10">{section.title}</h2>
                 <div className="mb-12 flex justify-center">
-                  <img 
-                    src={section.logo} 
-                    alt="University" 
-                    style={{ filter: "var(--partner-logo-filter)" }} 
-                    className="h-[100px] md:h-[180px] w-auto object-contain opacity-90" 
+                  <img
+                    src={section.logo}
+                    alt="University"
+                    style={{ filter: "var(--partner-logo-filter)" }}
+                    className="h-[100px] md:h-[180px] w-auto object-contain opacity-90"
                   />
                 </div>
                 <h3 className="text-3xl md:text-6xl font-black uppercase mb-4 tracking-tighter">{section.institution}</h3>
@@ -211,6 +204,22 @@ function App() {
                   ))}
                 </div>
               </div>
+            )}
+
+            {section.type === "enterprise-systems" && (
+              <EnterpriseSystems />
+            )}
+
+            {section.type === "engineering-intelligence" && (
+              <EngineeringIntelligence />
+            )}
+
+            {section.type === "k8s-diagram" && (
+              <KubernetesDiagram />
+            )}
+
+            {section.type === "website-stack" && (
+              <WebsiteStack />
             )}
 
             {section.type === "stack" && (
@@ -235,16 +244,16 @@ function App() {
 
           {/* Corrected Scrolling Indicator Footer */}
           <div className="flex-1 w-full flex items-end justify-center pb-24 md:pb-12">
-            <div 
+            <div
               className="flex flex-col items-center cursor-pointer group"
               onClick={() => {
                 const isLast = index === sections.length - 1;
                 if (isLast) {
                   containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
                 } else {
-                  containerRef.current?.scrollTo({ 
-                    top: containerRef.current.scrollTop + window.innerHeight, 
-                    behavior: 'smooth' 
+                  containerRef.current?.scrollTo({
+                    top: containerRef.current.scrollTop + window.innerHeight,
+                    behavior: 'smooth'
                   });
                 }
               }}
@@ -253,13 +262,13 @@ function App() {
                 {index < sections.length - 1 ? "Next" : "Back"}
               </span>
               <div style={{ backgroundColor: "var(--card-border)" }} className="w-[1px] h-10 relative overflow-hidden">
-                <motion.div 
-                  className="absolute top-0 left-0 w-full h-full" 
+                <motion.div
+                  className="absolute top-0 left-0 w-full h-full"
                   style={{ backgroundColor: "var(--text-main)" }}
-                  animate={{ 
-                    y: index < sections.length - 1 ? ["-100%", "100%"] : ["100%", "-100%"] 
-                  }} 
-                  transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }} 
+                  animate={{
+                    y: index < sections.length - 1 ? ["-100%", "100%"] : ["100%", "-100%"]
+                  }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
                 />
               </div>
             </div>
