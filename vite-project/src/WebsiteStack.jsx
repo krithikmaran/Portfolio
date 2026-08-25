@@ -11,9 +11,9 @@ export default function WebsiteStack() {
     },
     {
       step: "02",
-      layer: "Edge & DNS",
+      layer: "Domain & DNS",
       primary: "Cloudflare",
-      description: "Global CDN, SSL/TLS & Edge Caching",
+      description: "Domain Registrar & DNS Routing",
       icon: Shield,
     },
     {
