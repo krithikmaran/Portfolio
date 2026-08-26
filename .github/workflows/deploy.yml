@@ -47,6 +47,18 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: vite-project/package-lock.json
+
+      - name: Install Dependencies
+        run: |
+          cd vite-project && npm ci
+          echo "$GITHUB_WORKSPACE/vite-project/node_modules/.bin" >> $GITHUB_PATH
+
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
@@ -75,6 +87,18 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: vite-project/package-lock.json
+
+      - name: Install Dependencies
+        run: |
+          cd vite-project && npm ci
+          echo "$GITHUB_WORKSPACE/vite-project/node_modules/.bin" >> $GITHUB_PATH
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
