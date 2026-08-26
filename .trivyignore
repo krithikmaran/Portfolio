@@ -1,0 +1,3 @@
+# Ignore leftover template subdirectories
+vite-project/my-app/package-lock.json
+vite-project/my-static-site/package-lock.json

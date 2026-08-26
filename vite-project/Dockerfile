@@ -36,5 +36,8 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 # Expose port 80 to allow access to the app
 EXPOSE 80
 
+# Run as non-root user
+USER nginx
+
 # Run NGINX in the foreground (default behavior)
 CMD ["nginx", "-g", "daemon off;"]

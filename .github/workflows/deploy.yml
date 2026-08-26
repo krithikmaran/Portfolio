@@ -51,6 +51,7 @@ jobs:
           scan-ref: '.'
           format: 'table'
           scanners: 'vuln,secret,misconfig'
+          skip-dirs: 'vite-project/my-app,vite-project/my-static-site'
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
           exit-code: '1' # Fails the pipeline if CRITICAL or HIGH issues are found
