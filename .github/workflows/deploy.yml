@@ -43,6 +43,9 @@ jobs:
     if: github.event_name == 'pull_request'
     needs: verify
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: vite-project
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -55,9 +58,7 @@ jobs:
           cache-dependency-path: vite-project/package-lock.json
 
       - name: Install Dependencies
-        run: |
-          cd vite-project && npm ci
-          echo "$GITHUB_WORKSPACE/vite-project/node_modules/.bin" >> $GITHUB_PATH
+        run: npm ci
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
@@ -84,6 +85,9 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: verify
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: vite-project
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -96,9 +100,7 @@ jobs:
           cache-dependency-path: vite-project/package-lock.json
 
       - name: Install Dependencies
-        run: |
-          cd vite-project && npm ci
-          echo "$GITHUB_WORKSPACE/vite-project/node_modules/.bin" >> $GITHUB_PATH
+        run: npm ci
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
