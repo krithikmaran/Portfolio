@@ -9,7 +9,7 @@ Personal portfolio website built with React, Vite, and Tailwind CSS, deployed on
 - **Frontend Engine**: React 18 + Vite, Tailwind CSS, Lucide Icons, Framer Motion
 - **Domain & DNS**: Cloudflare (Domain Registrar & DNS Routing)
 - **Hosting & Edge**: Vercel
-- **CI/CD Pipeline**: GitHub Actions (`.github/workflows/deploy.yml`)
+- **CI/CD Pipeline & Security**: GitHub Actions (`.github/workflows/deploy.yml`) + Aqua Security Trivy Vulnerability Scanner
 
 ---
 
