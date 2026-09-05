@@ -19,7 +19,7 @@ export default function WebsiteStack() {
     {
       step: "03",
       layer: "Hosting & CI/CD",
-      primary: "Vercel",
+      primary: "Cloudflare Pages",
       description: "Automated Git Deployment",
       icon: Cloud,
     },

@@ -1,6 +1,6 @@
 # Krithik Maran — Portfolio Website
 
-Personal portfolio website built with React, Vite, and Tailwind CSS, deployed on Vercel with automated CI/CD via GitHub Actions.
+Personal portfolio website built with React, Vite, and Tailwind CSS, deployed on Cloudflare Pages with automated CI/CD via GitHub Actions.
 
 ---
 
@@ -8,7 +8,7 @@ Personal portfolio website built with React, Vite, and Tailwind CSS, deployed on
 
 - **Frontend Engine**: React 18 + Vite, Tailwind CSS, Lucide Icons, Framer Motion
 - **Domain & DNS**: Cloudflare (Domain Registrar & DNS Routing)
-- **Hosting & Edge**: Vercel
+- **Hosting & Edge**: Cloudflare Pages
 - **CI/CD Pipeline & Security**: GitHub Actions (`.github/workflows/deploy.yml`) + Aqua Security Trivy Vulnerability Scanner
 
 ---
@@ -45,11 +45,10 @@ Under **Repository Settings > Secrets and variables > Actions**:
 
 | Secret Name | Value / Description |
 | :--- | :--- |
-| `VERCEL_TOKEN` | Vercel Personal Access Token (Full Account scope) |
-| `VERCEL_ORG_ID` | `team_rFLMXJOgtBCA4OOwJGFOZvOU` |
-| `VERCEL_PROJECT_ID` | `prj_hMf26vA77TBwJe3q1Cuew0eMbBoB` |
+| `CLOUDFLARE_API_TOKEN` | Cloudflare API Token with Pages Edit permissions |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare Account ID |
 
 ### How the Pipeline Works
-1. **Verification**: Runs `npm ci` and ESLint checks within `vite-project/`.
-2. **PR Preview**: Builds and deploys a preview environment for Pull Requests.
-3. **Production Deployment**: Automatically triggers on `push` to `main` (and manual `workflow_dispatch`), linking the Vercel project, building the bundle, and deploying live to production.
+1. **Verification**: Runs `npm ci`, ESLint checks, and Aqua Security Trivy vulnerability scanner.
+2. **PR Preview**: Builds with Vite and deploys a preview environment to Cloudflare Pages for Pull Requests.
+3. **Production Deployment**: Automatically triggers on `push` to `main` (and manual `workflow_dispatch`), builds the bundle with Vite, and deploys to Cloudflare Pages production (`portfolio` project).
