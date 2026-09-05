@@ -40,6 +40,8 @@ body,
   padding: 0;
   width: 100%;
   height: 100%;
+  height: -webkit-fill-available;
+  height: 100dvh;
   background-color: var(--bg-main);
   color: var(--text-main);
   overflow: hidden; 
@@ -48,6 +50,22 @@ body,
 
 * {
   box-sizing: border-box;
+}
+
+/* Responsive Viewport Height utility with fallback for iOS Safari and dynamic toolbars */
+.portfolio-container {
+  height: 100vh;
+  height: -webkit-fill-available;
+  height: 100dvh;
+}
+
+.portfolio-section {
+  height: 100vh;
+  height: -webkit-fill-available;
+  height: 100dvh;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  min-height: 100dvh;
 }
 
 /* Scrollbar styling */
@@ -72,6 +90,10 @@ body,
 
 .theme-transition {
   transition: all 0.5s ease;
+}
+
+.safe-pb {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0.75rem));
 }
 
 @media (max-width: 768px) {
