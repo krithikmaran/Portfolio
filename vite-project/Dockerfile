@@ -10,7 +10,7 @@ COPY . ./
 RUN npm run build
 
 # ---- Stage 2: serve it with unprivileged NGINX (listens on 8080, runs as non-root) ----
-FROM nginxinc/nginx-unprivileged:1.29-alpine AS production
+FROM nginxinc/nginx-unprivileged:1.31-alpine AS production
 COPY --from=builder /app/dist /usr/share/nginx/html
 # The base image already defaults to this user; stating it explicitly satisfies Trivy DS-0002.
 USER nginx
