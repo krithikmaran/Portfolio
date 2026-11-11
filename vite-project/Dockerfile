@@ -2,7 +2,7 @@
 # CI builds this image on every run to keep it working.
 
 # ---- Stage 1: build the static bundle ----
-FROM node:22-alpine AS builder
+FROM node:25-alpine AS builder
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
