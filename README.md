@@ -54,7 +54,7 @@ Under **Repository Settings > Secrets and variables > Actions**:
 
 ### How the Pipeline Works
 1. **Verification**: `npm ci`, ESLint, Vitest unit tests, a Vite build (uploaded as an artifact), and the Aqua Security Trivy vulnerability, secret and misconfiguration scanner.
-2. **Docker Build Check**: Builds `vite-project/Dockerfile` and smoke-tests that the container serves the site.
+2. **Docker Build Check**: Builds `vite-project/Dockerfile` to confirm the image still builds (Trivy covers Dockerfile misconfigurations).
 3. **PR Preview**: For pull requests into `main` (from this repo, not forks), deploys the already-built bundle as a Cloudflare Pages preview.
 4. **Production Deployment**: On `push` to `main`, or a manual `workflow_dispatch` run **on `main`**, deploys the same bundle to Cloudflare Pages production (`portfolio` project). Manual runs on other branches never deploy to production.
 

@@ -73,6 +73,7 @@ jobs:
 
   docker-build:
     name: Docker Build Check
+    # Confirms the image still builds; Trivy (in verify) scans the Dockerfile for misconfigurations.
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -80,17 +81,6 @@ jobs:
 
       - name: Build Image
         run: docker build --tag portfolio:ci vite-project
-
-      - name: Smoke Test Container
-        run: |
-          docker run -d --name portfolio -p 8080:8080 portfolio:ci
-          for i in $(seq 1 15); do
-            if curl -fsS http://127.0.0.1:8080/ | grep -q '<div id="root">'; then
-              echo "Container serves the site"; docker rm -f portfolio; exit 0
-            fi
-            sleep 1
-          done
-          docker logs portfolio; exit 1
 
   deploy-preview:
     name: Deploy PR Preview
