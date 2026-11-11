@@ -8,15 +8,15 @@ export default function WebsiteStack() {
       primary: "React + Vite",
       description: "Fluid Single-Page Architecture with Framer Motion & Tailwind CSS",
       icon: Globe,
-      tags: ["React 19", "Vite", "Framer Motion"],
+      tags: ["React 18", "Vite", "Framer Motion"],
     },
     {
       step: "02",
       layer: "CI/CD & DevSecOps",
       primary: "GitHub Actions",
-      description: "Automated linting, builds, and Aqua Trivy CVE/secret security scanning",
+      description: "Automated linting, unit tests, Docker build check, and Aqua Trivy CVE/secret scanning",
       icon: Workflow,
-      tags: ["Trivy Scanner", "Automated Tests", "Dockerized"],
+      tags: ["Trivy Scanner", "Vitest Tests", "Docker Build"],
     },
     {
       step: "03",
