@@ -11,37 +11,51 @@ permissions:
   contents: read
   deployments: write
 
+# One run per branch/PR at a time. Superseded PR runs are cancelled;
+# production runs queue instead so a deploy is never cut off midway.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+# Third-party actions and images are pinned to exact commits/digests.
+# Dependabot (.github/dependabot.yml) proposes updates to these pins.
 jobs:
   verify:
-    name: Lint, Test & Trivy Security Scan
+    name: Lint, Test, Build & Trivy Scan
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: vite-project
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: 22
+          node-version-file: vite-project/.nvmrc
           cache: 'npm'
           cache-dependency-path: vite-project/package-lock.json
 
       - name: Install Dependencies
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install
-          fi
+        run: npm ci
 
       - name: Run Linter
-        run: npm run lint --if-present
+        run: npm run lint
 
       - name: Run Unit Tests
-        run: npm test --if-present
+        run: npm test
+
+      - name: Build with Vite
+        run: npm run build
+
+      - name: Upload Build Output
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: dist
+          path: vite-project/dist
+          if-no-files-found: error
+          retention-days: 7
 
       # --- Trivy Security Scanning ---
       - name: Run Trivy Vulnerability & Secret Scanner
@@ -50,86 +64,64 @@ jobs:
           docker run --rm \
             -v "${{ github.workspace }}:/workspace" \
             -w /workspace \
-            aquasec/trivy:latest fs . \
+            aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb fs . \
             --format table \
             --scanners vuln,secret,misconfig \
-            --skip-dirs "vite-project/my-app,vite-project/my-static-site" \
             --ignore-unfixed \
             --severity CRITICAL,HIGH \
             --exit-code 1
 
-  deploy-preview:
-    name: Deploy PR Preview
-    if: github.event_name == 'pull_request'
-    needs: verify
+  docker-build:
+    name: Docker Build Check
+    # Confirms the image still builds; Trivy (in verify) scans the Dockerfile for misconfigurations.
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: vite-project
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Build Image
+        run: docker build --tag portfolio:ci vite-project
+
+  deploy-preview:
+    name: Deploy PR Preview
+    # Fork PRs don't get repository secrets, so skip them instead of failing.
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    needs: [verify, docker-build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Build Output
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
-          node-version: 22
-          cache: 'npm'
-          cache-dependency-path: vite-project/package-lock.json
-
-      - name: Install Dependencies
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install
-          fi
-
-      - name: Build with Vite
-        run: npm run build
+          name: dist
+          path: dist
 
       - name: Deploy Preview to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3.15.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=portfolio --branch=${{ github.head_ref }}
-          workingDirectory: 'vite-project'
 
   deploy-production:
     name: Deploy to Production
-    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch'
-    needs: verify
+    # Only ever deploy main to production, including manual runs. A manual run
+    # started on another branch skips this job instead of shipping that branch.
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    needs: [verify, docker-build]
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: vite-project
+    environment:
+      name: production
+      url: https://krithikmaran.work
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Download Build Output
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
-          node-version: 22
-          cache: 'npm'
-          cache-dependency-path: vite-project/package-lock.json
-
-      - name: Install Dependencies
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install
-          fi
-
-      - name: Build with Vite
-        run: npm run build
+          name: dist
+          path: dist
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3.15.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=portfolio --branch=main
-          workingDirectory: 'vite-project'

@@ -1,43 +1,19 @@
-################################
-## Stage 1: Build the React app using Node ##
-################################
+# Container build of the site (optional local/self-hosted alternative to Cloudflare Pages).
+# CI builds this image on every run to keep it working.
 
-# Use Node.js Alpine image for building the app
-FROM node:18-alpine as builder
-
-# Set the working directory inside the container
+# ---- Stage 1: build the static bundle ----
+FROM node:22-alpine AS builder
 WORKDIR /app
-
-# Copy package.json and package-lock.json to leverage Docker caching
-COPY package*.json ./
-
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the app files into the container
+COPY package.json package-lock.json ./
+RUN npm ci
 COPY . ./
-
-# Build the React app for production
 RUN npm run build
 
-################################
-## Stage 2: Serve the app with NGINX ##
-################################
-
-# Use the official NGINX Alpine image for production
-FROM nginx:alpine as production
-
-# Copy custom NGINX configuration (if needed)
-# COPY nginx.conf /etc/nginx/nginx.conf
-
-# Copy the build output from the builder stage into NGINX's html directory
+# ---- Stage 2: serve it with unprivileged NGINX (listens on 8080, runs as non-root) ----
+FROM nginxinc/nginx-unprivileged:1.29-alpine AS production
 COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Expose port 80 to allow access to the app
-EXPOSE 80
-
-# Run as non-root user
+# The base image already defaults to this user; stating it explicitly satisfies Trivy DS-0002.
 USER nginx
-
-# Run NGINX in the foreground (default behavior)
+EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://127.0.0.1:8080/ >/dev/null || exit 1
 CMD ["nginx", "-g", "daemon off;"]

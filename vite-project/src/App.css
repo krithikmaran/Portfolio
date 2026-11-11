@@ -88,8 +88,10 @@ body,
   scrollbar-width: none;
 }
 
+/* Only animate colors. "transition: all" on the scroll container caused
+   stale repaints (page stuck dark) after switching to light mode. */
 .theme-transition {
-  transition: all 0.5s ease;
+  transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 .safe-pb {

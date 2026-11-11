@@ -1,8 +1,16 @@
-# React + Vite
+# vite-project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Source for [krithikmaran.work](https://krithikmaran.work). See the [root README](../README.md) for the stack, pipeline and deployment notes.
 
-Currently, two official plugins are available:
+| Command | What it does |
+| :--- | :--- |
+| `npm run dev` | Start the Vite dev server |
+| `npm test` | Run the Vitest unit tests once |
+| `npm run test:watch` | Run tests in watch mode |
+| `npm run lint` | Run ESLint |
+| `npm run build` | Build the production bundle into `dist/` |
+| `npm run preview` | Serve `dist/` locally |
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Files in `public/` are copied as-is to the site root: `resume.pdf` (stable resume link), `_headers` (Cloudflare security and cache headers), `robots.txt`, `sitemap.xml`, `og-image.png` and `apple-touch-icon.png`.
+
+If you change the inline theme script in `index.html`, update its `sha256-...` hash in the `Content-Security-Policy` in `public/_headers`. The `npm test` suite checks that the two match.

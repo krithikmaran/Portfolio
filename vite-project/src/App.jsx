@@ -1,7 +1,6 @@
 import { motion, useScroll, useSpring } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { Sun, Moon } from "lucide-react";
-import resume from "./assets/Krithik Maran Resume.pdf";
 import logo from "./assets/large-website-logo.svg";
 import osuEngineeringLogo from "./assets/Engineering-REV-Stacked-RGBHEX.png";
 import cintasLogo from "./assets/CintasLogo.png";
@@ -11,27 +10,32 @@ import KubernetesDiagram from "./KubernetesDiagram";
 import WebsiteStack from "./WebsiteStack";
 import "./App.css";
 
+function readSavedTheme() {
+  try {
+    return localStorage.getItem("theme");
+  } catch {
+    return null;
+  }
+}
+
 function App() {
   const containerRef = useRef(null);
-  const [theme, setTheme] = useState("dark");
+  // The inline script in index.html sets data-theme before first paint,
+  // so React starts in sync with it (no light-mode flash).
+  const [theme, setTheme] = useState(
+    () => document.documentElement.getAttribute("data-theme") || "dark"
+  );
 
   // --- Theme Management ---
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
+
+  useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
-    const initialTheme = savedTheme || (mediaQuery.matches ? "dark" : "light");
-    setTheme(initialTheme);
-    document.documentElement.setAttribute("data-theme", initialTheme);
-
     const handleChange = (e) => {
-      if (!localStorage.getItem("theme")) {
-        const newTheme = e.matches ? "dark" : "light";
-        setTheme(newTheme);
-        document.documentElement.setAttribute("data-theme", newTheme);
-      }
+      if (!readSavedTheme()) setTheme(e.matches ? "dark" : "light");
     };
-
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
@@ -39,8 +43,11 @@ function App() {
   const toggleTheme = () => {
     const newTheme = theme === "dark" ? "light" : "dark";
     setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-    document.documentElement.setAttribute("data-theme", newTheme);
+    try {
+      localStorage.setItem("theme", newTheme);
+    } catch {
+      // Storage unavailable (private mode, blocked cookies) - theme still applies for this visit.
+    }
   };
 
   // --- Content Data ---
@@ -107,26 +114,33 @@ function App() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <img
-          src={logo}
-          alt="Logo"
-          style={{ filter: "var(--nav-logo-filter)" }}
-          className="h-8 sm:h-10 md:h-14 w-auto flex-shrink-0 transition-all active:scale-95 cursor-pointer"
+        <button
+          type="button"
+          aria-label="Home"
+          className="flex-shrink-0 cursor-pointer bg-transparent border-0 p-0 transition-all active:scale-95"
           onClick={() => document.getElementById("section-0")?.scrollIntoView({ behavior: "smooth" })}
-        />
+        >
+          <img
+            src={logo}
+            alt="Krithik Maran logo"
+            style={{ filter: "var(--nav-logo-filter)" }}
+            className="h-8 sm:h-10 md:h-14 w-auto"
+          />
+        </button>
 
         <div
           style={{ backgroundColor: "var(--nav-bg)", borderColor: "var(--card-border)" }}
           className="border backdrop-blur-2xl px-3.5 py-1.5 sm:px-4 sm:py-2 md:px-5 md:py-3 rounded-full flex space-x-3 sm:space-x-4 md:space-x-6 items-center shadow-xl"
         >
-          <a href={resume} target="_blank" rel="noopener noreferrer" className="text-[10px] sm:text-[11px] md:text-xs tracking-wider sm:tracking-widest font-bold uppercase hover:opacity-70 transition-opacity">Resume</a>
+          <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="text-[10px] sm:text-[11px] md:text-xs tracking-wider sm:tracking-widest font-bold uppercase hover:opacity-70 transition-opacity">Resume</a>
           <a href="https://github.com/krithikmaran" target="_blank" rel="noopener noreferrer" className="text-[10px] sm:text-[11px] md:text-xs tracking-wider sm:tracking-widest font-bold uppercase hover:opacity-70 transition-opacity">GitHub</a>
           <a href="https://linkedin.com/in/krithikmaran" target="_blank" rel="noopener noreferrer" className="text-[10px] sm:text-[11px] md:text-xs tracking-wider sm:tracking-widest font-bold uppercase hover:opacity-70 transition-opacity">LinkedIn</a>
 
           <button
             onClick={toggleTheme}
             className="hover:opacity-50 transition-all border-l pl-2.5 sm:pl-3 md:pl-4 border-current flex items-center justify-center cursor-pointer"
-            aria-label="Toggle Theme"
+            type="button"
+            aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
           >
             {theme === "dark" ? (
               <Moon size={15} className="sm:w-4 sm:h-4 md:w-[18px] md:h-[18px]" strokeWidth={2.5} />
@@ -225,33 +239,14 @@ function App() {
               <WebsiteStack />
             )}
 
-            {section.type === "stack" && (
-              <div className="w-full flex flex-col items-center">
-                <h2 className="text-base sm:text-xl md:text-3xl font-light tracking-[0.35em] sm:tracking-[0.4em] uppercase mb-2 md:mb-4">{section.title}</h2>
-                {section.subtitle && (
-                  <p style={{ color: "var(--text-muted)" }} className="text-[10px] sm:text-xs tracking-[0.2em] sm:tracking-[0.25em] uppercase mb-4 md:mb-8 font-semibold text-center max-w-xl">
-                    {section.subtitle}
-                  </p>
-                )}
-                {!section.subtitle && <div className="mb-4 md:mb-8" />}
-                <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-2xl">
-                  {section.content.map((item, i) => (
-                    <div key={i} style={{ backgroundColor: "var(--card-bg)", borderColor: "var(--card-border)" }} className="px-3.5 py-2 sm:px-5 sm:py-3 rounded-xl border">
-                      <span className="text-xs sm:text-sm md:text-lg tracking-wider md:tracking-widest uppercase font-medium">{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </motion.div>
 
           {/* Guaranteed Visible Scrolling Indicator Footer - Never pushed off screen */}
           <div className="shrink-0 w-full flex items-end justify-center pb-3 sm:pb-5 md:pb-8 safe-pb z-30">
-            <div
-              role="button"
-              tabIndex={0}
+            <button
+              type="button"
               aria-label={index < sections.length - 1 ? "Next Section" : "Back to Top"}
-              className="flex flex-col items-center cursor-pointer group py-1.5 px-6 select-none active:opacity-60 transition-opacity touch-manipulation"
+              className="flex flex-col items-center cursor-pointer group bg-transparent border-0 py-1.5 px-6 select-none active:opacity-60 transition-opacity touch-manipulation"
               onClick={() => {
                 const isLast = index === sections.length - 1;
                 const targetId = isLast ? "section-0" : `section-${index + 1}`;
@@ -280,7 +275,7 @@ function App() {
                   transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
                 />
               </div>
-            </div>
+            </button>
           </div>
         </section>
       ))}
